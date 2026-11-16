@@ -1,0 +1,28 @@
+# Lake plan gate: checks that every plan in .lake/plans/ touched by a PR is approved,
+# for its current version, by someone other than the PR author.
+# Make "lake/plan-approval" a required status check in branch protection to enforce it.
+name: Lake plan gate
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+  issue_comment:
+    types: [created, edited, deleted]
+permissions:
+  contents: read
+  pull-requests: read
+  issues: write
+  statuses: write
+concurrency:
+  group: lake-gate-${{ github.event.pull_request.number || github.event.issue.number }}
+  cancel-in-progress: false
+jobs:
+  plan-gate:
+    if: github.event_name != 'issue_comment' || (github.event.issue.pull_request && contains(github.event.comment.body, '/lake'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: getlake/lake-gate@v0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,16 @@
+# Sandbox helper: opens a PR as github-actions[bot], so a human account can review it as a non-author.
+name: Open PR as bot
+on:
+  workflow_dispatch:
+    inputs:
+      head: { description: Branch to open the PR from, required: true }
+      title: { description: PR title, required: true }
+permissions:
+  contents: read
+  pull-requests: write
+jobs:
+  open:
+    runs-on: ubuntu-latest
+    steps:
+      - run: gh pr create -R "$GITHUB_REPOSITORY" --head "${{ inputs.head }}" --base main --title "${{ inputs.title }}" --body "Plan first. The agent builds after a teammate approves this exact version."
+        env: { GH_TOKEN: "${{ github.token }}" }

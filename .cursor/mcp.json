@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "lake-gate": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "lake-gate@0",
+        "mcp"
+      ]
+    }
+  }
+}

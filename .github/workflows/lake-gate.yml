@@ -11,7 +11,7 @@ on:
     types: [created, edited, deleted]
 permissions:
   contents: read
-  pull-requests: read
+  pull-requests: write # to post and update the summary comment
   issues: write
   statuses: write
 concurrency:
